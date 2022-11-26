@@ -16,5 +16,9 @@ The individual shares themselves have no special meaning, and original image can
 image splitter includes sympy, numpy and cv2 as external libraries.
 Therefore, please install those libraries when you test this.
 
-
 ![test](./docs/example.gif)
+
+# TODO:
+
+Currently, only very small files in BMP format are supported.
+Therefore, I would like to support large files such as JPEG, PNG, etc...
