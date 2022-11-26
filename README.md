@@ -7,6 +7,8 @@ image splitter is an application that allows you to secure your secret images by
 image splitter distributes an image into several "shares" based on Samir's secret sharing.
 The individual shares themselves have no special meaning, and original image can be restored only when it has attracted more than a predetermined "threshold" number of shares.
 
+![explain](./docs/explain.pdf)
+
 # How to run
 
 - Run : ./test.sh or python3 main.py
