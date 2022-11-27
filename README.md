@@ -16,10 +16,12 @@ The individual shares themselves have no special meaning, and original image can
 image splitter includes sympy, numpy and cv2 as external libraries.
 Therefore, please install those libraries when you test this.
 
-BMP format test
+- Demo
+
+BMP format test\
 ![test](./docs/example.gif)
 
-JPEG format test
+JPEG format test\
 ![JPEG](./docs/example2.gif)
 
 
