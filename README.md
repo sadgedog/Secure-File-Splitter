@@ -16,9 +16,17 @@ The individual shares themselves have no special meaning, and original image can
 image splitter includes sympy, numpy and cv2 as external libraries.
 Therefore, please install those libraries when you test this.
 
+BMP format test
 ![test](./docs/example.gif)
 
-# TODO:
+JPEG format test
+![JPEG](./docs/example2.gif)
 
-Currently, only very small files in BMP format are supported.
-Therefore, I would like to support large files such as JPEG, PNG, etc...
+
+# TODO:
+Support PNG
+
+Improve efficiency
+Relatively new python versions are very slow in converting very very long Integer type to String.
+For this reason, Integer types with more than 4300 digits are prohibited (this limit can be removed by using sys.set_int_max_str_digits()).
+Despite avoiding these causes of very slow speed, this application is still very very slow when distributing large files such as JPEGs.
