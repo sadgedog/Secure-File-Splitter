@@ -24,9 +24,9 @@ JPEG format test
 
 
 # TODO:
-Support PNG
+- Support PNG
 
-Improve efficiency
-Relatively new python versions are very slow in converting very very long Integer type to String.
+- Improve efficiency.\
+Relatively new python versions are very slow in converting very very long Integer type to  String.
 For this reason, Integer types with more than 4300 digits are prohibited (this limit can be removed by using sys.set_int_max_str_digits()).
 Despite avoiding these causes of very slow speed, this application is still very very slow when distributing large files such as JPEGs.
