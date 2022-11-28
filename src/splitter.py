@@ -21,11 +21,13 @@ def hash_to_scalar(msg):
 def generate_share(s: int, n: int, k: int):    
     coefficients = [s]
     for i in range(1, k):
-        tmp = hash_to_scalar(f"hash_to_scalar:{s}:{i*rnd_scalar()}") * rnd_scalar() % fm
+        # tmp = hash_to_scalar(f"hash_to_scalar:{s}:{i*rnd_scalar()}") * rnd_scalar() % fm
+        tmp = rnd_scalar()
         coefficients.append(tmp)
     
     def f(x):
-        func = sum(coef * pow(x, j, fm) for j, coef in enumerate(coefficients)) % fm
+        # func = sum(coef * pow(x, j, fm) for j, coef in enumerate(coefficients)) % fm
+        func = sum(coef * pow(x, j, fm) for j, coef in enumerate(coefficients))
         return func
 
     

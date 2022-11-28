@@ -1,8 +1,8 @@
 import sys
-sys.set_int_max_str_digits(1000000000)
-
+# sys.set_int_max_str_digits(1000000000)
 import cv2
 from const import (
+    split_rate,
     image_path,
     gopher,
     REC,
@@ -29,10 +29,10 @@ def encoder_jpeg(img: str) -> list[int]:
     img = f
     encoded_img = []
     # integer limit 4300 in python
-    # for each elemet -> 1000 * (1 ~ 3)
+    # for each elemet -> 2900
     # img = str(img)
-    for i in range(0, len(img), 1000):
-        tmp = "".join(map(str, img[i : i + 1000]))
+    for i in range(0, len(img), split_rate):
+        tmp = "".join(map(str, img[i : i + split_rate]))
         tmp = int(tmp, 16)
         encoded_img.append(tmp)
 
@@ -44,7 +44,7 @@ def decoder_jpeg(filepath: str, name, img: list) -> None:
     # 桁数合わせて0パディング
     for i in range(len(img)):
         img[i] = hex(int(img[i]))[2:]
-        while len(img[i]) % 1000 != 0 and img.index(img[-1]) != i:
+        while len(img[i]) % split_rate != 0 and img.index(img[-1]) != i:
             img[i] = "0" + img[i]
     data = "".join(map(str, img))
     data = bytes.fromhex(data)
@@ -52,8 +52,6 @@ def decoder_jpeg(filepath: str, name, img: list) -> None:
     filename = filepath + name
     with open(filename, "wb") as f:
         f.write(data)
-
-# decoder_jpeg("../recovered_image/", "test.jpeg", Result)
     
 
 def encoder_bmp(img: str) -> int:
