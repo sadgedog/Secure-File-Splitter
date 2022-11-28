@@ -7,6 +7,8 @@ image splitter is an application that allows you to secure your secret images by
 image splitter distributes an image into several "shares" based on Samir's secret sharing.
 The individual shares themselves have no special meaning, and original image can be restored only when it has attracted more than a predetermined "threshold" number of shares.
 
+
+
 ![explain](./docs/explain.png)
 
 # How to run
@@ -23,6 +25,12 @@ BMP format test\
 
 JPEG format test\
 ![JPEG](./docs/example2.gif)
+
+
+
+It takes 0.87sec to recover JPEG image\
+Generate Shares -> 9.15 MB/sec\
+Recover Images -> 413 KB/sec
 
 
 # TODO:
