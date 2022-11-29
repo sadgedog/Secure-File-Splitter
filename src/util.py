@@ -17,17 +17,21 @@ def encoder(img: str) -> str:
 
     return encoded_img
 
+import time
 # int, str間の変換は桁数が大きくなるとかなり遅い
 # そのためhexのまま分割してその先でint変換する
 def encoder_jpeg(img: str) -> list[int]:
     with open(img, "rb") as f:
-        f = f.read().hex()    
+        f = f.read().hex()
     
     img = f
     encoded_img = []
+    ##############################
+    ### here is very very slow ###
+    ### fix here               ###
+    ##############################
     # integer limit 4300 in python
     # for each elemet -> 2900
-    # img = str(img)
     for i in range(0, len(img), split_rate):
         tmp = "".join(map(str, img[i : i + split_rate]))
         tmp = int(tmp, 16)
