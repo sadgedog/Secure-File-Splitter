@@ -140,27 +140,33 @@ def main():
     show_img(l)
 
     s_all = time.perf_counter()
-    S1 = time.perf_counter()
     # JPEG TEST
     print("JPEG TEST START")
+    s_enc = time.perf_counter()
     Secret = encoder_jpeg(image_path)
+    e_enc = time.perf_counter()
+    print("Encode Time :   ", e_enc - s_enc)
     Shares = []
 
-    
+    S1 = time.perf_counter()
+    # rnd coefficients
     l = []
     for i in range(1, k):
         tmp = rnd_scalar()
         l.append(tmp)
         
     for i in range(len(Secret)):
-        tmp = generate_share(Secret[i], n, k)
-        # tmp = generate_share_2(Secret[i], n, k, l)
+        # tmp = generate_share(Secret[i], n, k)
+        tmp = generate_share_2(Secret[i], n, k, l)
         Shares.append(tmp)
-
-    print("Generate shares finished")
+    
     E1 = time.perf_counter()
     print("Generate Time : ", E1 - S1)
-    # Generate Time -> 9.15 MB/sec
+    # Generate Time -> 42.04 MB/sec
+
+    print("Encode + Generate Time : ", E1 - s_enc, "\n")
+
+    print("Generate shares finished")
     
     S2 = time.perf_counter()
     recovered_img = []
@@ -169,17 +175,22 @@ def main():
         recovered_img.append(tmp)
         # print("recovered_img", tmp)
         
-    print("Recovered Image finished")
     E2 = time.perf_counter()
-    print("Recover Time : ", E2 - S2)
-    # Recover time -> 32.41 MB/sec
+    print("Recover Time :  ", E2 - S2)
+    # Recover time -> 32.71 MB/sec
 
-    
+    s_dec = time.perf_counter()
     # write recovered image
     decoder_jpeg(REC, "Recovered_JPEG_Image.jpg", recovered_img)
+    e_dec = time.perf_counter()
+    print("Decode Time :   ", e_dec - s_dec)
+
+    print("Recover + Decode Time : ", e_dec - S2, "\n")
+    
+    print("Recovered Image finished")
     
     e_all = time.perf_counter()
-    print("Total Time : ", e_all - s_all)
+    print("Total Time :    ", e_all - s_all)
 
     # check image
     for i in range(len(Secret)):

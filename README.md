@@ -28,10 +28,10 @@ JPEG format test\
 
 
 with my Mac(2020 m1, 16GB) it takes 0.05sec to recover JPEG image\
-Generate Shares -> 9.15 MB/sec
+Generate Shares -> 42.04 MB/sec
 
-Recover Images -> 32.41 MB/sec
+Recover Images -> 32.71 MB/sec
 
 
 # TODO:
-- Improve efficiency of generating shares
+- Improve efficiency of Encode, Decode
