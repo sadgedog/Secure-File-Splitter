@@ -1,4 +1,5 @@
 import sys
+import time
 import cv2
 from const import (
     split_rate,
@@ -17,7 +18,7 @@ def encoder(img: str) -> str:
 
     return encoded_img
 
-import time
+
 # int, str間の変換は桁数が大きくなるとかなり遅い
 # そのためhexのまま分割してその先でint変換する
 def encoder_jpeg(img: str) -> list[int]:
@@ -43,17 +44,27 @@ def encoder_jpeg(img: str) -> list[int]:
 def decoder_jpeg(filepath: str, name, img: list) -> None:
     # 16 -> 10 -> 16で桁が消えることがあるので
     # 桁数合わせて0パディング
+    s1 = time.perf_counter()
+
+    ##############################
+    ### here is very very slow ###
+    ### fix here               ###
+    ##############################
     for i in range(len(img)):
         img[i] = hex(int(img[i]))[2:]
         while len(img[i]) % split_rate != 0 and img.index(img[-1]) != i:
             img[i] = "0" + img[i]
     data = "".join(map(str, img))
     data = bytes.fromhex(data)
-    
+
+    e1 = time.perf_counter()
+    print(e1 - s1)
+
     filename = filepath + name
     with open(filename, "wb") as f:
         f.write(data)
-    
+    e2 = time.perf_counter()
+    print(e2 - e1)
 
 def encoder_bmp(img: str) -> int:
     with open(img, "rb") as f:

@@ -181,6 +181,7 @@ def main():
 
     s_dec = time.perf_counter()
     # write recovered image
+    # rec = "../../tmp_data/100MB.png"
     decoder_jpeg(REC, "Recovered_JPEG_Image.jpg", recovered_img)
     e_dec = time.perf_counter()
     print("Decode Time :   ", e_dec - s_dec)
