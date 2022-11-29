@@ -15,7 +15,7 @@ The individual shares themselves have no special meaning, and original image can
 
 - Run : ./test.sh or python3 main.py
 
-image splitter includes sympy, numpy and cv2 as external libraries.
+image splitter includes cv2 as external libraries.
 Therefore, please install those libraries when you test this.
 
 - Demo
@@ -27,15 +27,11 @@ JPEG format test\
 ![JPEG](./docs/example2.gif)
 
 
+with my Mac(2020 m1, 16GB) it takes 0.05sec to recover JPEG image\
+Generate Shares -> 9.15 MB/sec
 
-It takes 0.87sec to recover JPEG image\
-Generate Shares -> 9.15 MB/sec\
-Recover Images -> 413 KB/sec
+Recover Images -> 32.41 MB/sec
 
 
 # TODO:
-- Support PNG
-
-- Improve efficiency
-
-- Support Video format
+- Improve efficiency of generating shares

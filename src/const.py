@@ -8,6 +8,7 @@ fmt = "424de60500000000000076000000280000002d0000003a000000010004000000000070050
 
 # secret images
 image_path = "../secret_image/sadgedog.jpeg"
+# image_path = "../secret_image/1GB.jpg"
 gopher = "../secret_image/gopher.bmp"
 
 # recovered image and shares

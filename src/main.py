@@ -1,12 +1,11 @@
 import sys
 import time
 import cv2
-import sympy
-import numpy
 from splitter import (
     rnd_scalar,
     hash_to_scalar,
     generate_share,
+    generate_share_2,
 )
 
 from recover import (
@@ -146,18 +145,23 @@ def main():
     print("JPEG TEST START")
     Secret = encoder_jpeg(image_path)
     Shares = []
+
+    
+    l = []
+    for i in range(1, k):
+        tmp = rnd_scalar()
+        l.append(tmp)
+        
     for i in range(len(Secret)):
         tmp = generate_share(Secret[i], n, k)
+        # tmp = generate_share_2(Secret[i], n, k, l)
         Shares.append(tmp)
 
     print("Generate shares finished")
     E1 = time.perf_counter()
     print("Generate Time : ", E1 - S1)
     # Generate Time -> 9.15 MB/sec
-        
-    # for i in range(len(Shares)):
-    #     print(f"share[{i}]", Shares[i])
-        
+    
     S2 = time.perf_counter()
     recovered_img = []
     for i in range(len(Shares)):
@@ -168,12 +172,12 @@ def main():
     print("Recovered Image finished")
     E2 = time.perf_counter()
     print("Recover Time : ", E2 - S2)
-    # Recover time -> 413 KB/sec
+    # Recover time -> 32.41 MB/sec
 
     
     # write recovered image
     decoder_jpeg(REC, "Recovered_JPEG_Image.jpg", recovered_img)
-
+    
     e_all = time.perf_counter()
     print("Total Time : ", e_all - s_all)
 
