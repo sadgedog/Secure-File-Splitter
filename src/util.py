@@ -1,5 +1,4 @@
 import sys
-# sys.set_int_max_str_digits(1000000000)
 import cv2
 from const import (
     split_rate,
@@ -9,7 +8,6 @@ from const import (
     fmt,
 )
 
-# TODO : jpeg, png, etc...
 def encoder(img: str) -> str:
     image = cv2.imread(img)
     # cv2.imshow("img", image)
@@ -22,10 +20,9 @@ def encoder(img: str) -> str:
 # int, str間の変換は桁数が大きくなるとかなり遅い
 # そのためhexのまま分割してその先でint変換する
 def encoder_jpeg(img: str) -> list[int]:
-    # img = encoder(img)
     with open(img, "rb") as f:
-        f = f.read().hex()
-        # f = int(f, 16)
+        f = f.read().hex()    
+    
     img = f
     encoded_img = []
     # integer limit 4300 in python
@@ -56,8 +53,6 @@ def decoder_jpeg(filepath: str, name, img: list) -> None:
 
 def encoder_bmp(img: str) -> int:
     with open(img, "rb") as f:
-        # enc_img = f.read()
-        # enc_img = int.from_bytes(enc_img, byteorder = "big")
         enc_img = f.read().hex()
         print(enc_img)
         enc_img = enc_img[len(fmt):]

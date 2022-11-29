@@ -25,14 +25,11 @@ def generate_share(s: int, n: int, k: int):
         coefficients.append(tmp)
     
     def f(x):
-        # func = sum(coef * pow(x, j, fm) for j, coef in enumerate(coefficients)) % fm
         func = sum(coef * x**j for j, coef in enumerate(coefficients))
         return func
-
     
     shares = [f(x) for x in range(1, n + 1)]
     return shares
-
 
 
 def generate_share_2(s: int, n: int, k: int, rnd: list):
