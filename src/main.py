@@ -15,16 +15,19 @@ from recover import (
 
 from const import (
     image_path,
+    gif_path,
     gopher,
     REC,
+    recover_name,
+    recover_name_gif,
     width, height,
 )
 
 from util import (
     encoder_bmp,
     decoder_bmp,
-    encoder_jpeg,
-    decoder_jpeg,
+    encoder,
+    decoder,
 )
 
 def show_img(image):
@@ -96,9 +99,51 @@ def show_img2(image):
             cv2.imshow(title, all_image[i])
             cv2.moveWindow(title, i * W, 0)    
 
+    cv2.waitKey(1)
+#    cv2.destroyAllWindows()
+
+
+def show_img3(image):
+    Video = []
+    W = width * 6
+    H = height * 6
+    for i in range(len(image)):
+        Video.append(cv2.VideoCapture(image[i]))
+        
+    fps = Video[0].get(cv2.CAP_PROP_FPS)
+
+    FRAME = []
+    FRAME2 = []
+    while Video[0].isOpened():
+        ret, frame = Video[0].read()
+        ret2, frame2 = Video[1].read()
+        if frame is None:
+            break
+        FRAME.append(frame)
+        FRAME2.append(frame2)
+    Video[0].release()
+    Video[1].release()
+    
+    end = False
+    while True:
+        if end:
+            break
+        for f in range(len(FRAME)):
+            cv2.imshow("Original GIF", FRAME[f])
+            cv2.moveWindow("Original GIF", W*3, 400)
+            cv2.waitKey(int(200 / fps))
+            
+            cv2.imshow("Recovered GIF", FRAME2[f])
+            cv2.moveWindow("Recovered GIF", W*5, 400)
+            cv2.waitKey(int(200 / fps))
+            k = cv2.waitKey(int(fps)) & 0xFF
+            if k == 27:
+                end = True
+                break
+            
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
+    
     
 def main():
     args = sys.argv
@@ -143,7 +188,7 @@ def main():
     # JPEG TEST
     print("JPEG TEST START")
     s_enc = time.perf_counter()
-    Secret = encoder_jpeg(image_path)
+    Secret = encoder(image_path)
     e_enc = time.perf_counter()
     print("Encode Time :   ", e_enc - s_enc)
     Shares = []
@@ -182,7 +227,7 @@ def main():
     s_dec = time.perf_counter()
     # write recovered image
     # rec = "../../tmp_data/100MB.png"
-    decoder_jpeg(REC, "Recovered_JPEG_Image.jpg", recovered_img)
+    decoder(REC, recover_name, recovered_img)
     e_dec = time.perf_counter()
     print("Decode Time :   ", e_dec - s_dec)
 
@@ -206,8 +251,50 @@ def main():
     # l.append(image_path)
     # l.append(REC + "Recovered_JPEG_Image.jpg")
     l = [image_path]
-    l.append(REC + "Recovered_JPEG_Image.jpg")
+    l.append(REC + recover_name)
     show_img2(l)
+
+
+    # gif
+    Secret = encoder(gif_path)
+    Shares = []
+
+    # rnd coefficients
+    l = []
+    for i in range(1, k):
+        tmp = rnd_scalar()
+        l.append(tmp)
+
+    # gen shares
+    for i in range(len(Secret)):
+        tmp = generate_share_2(Secret[i], n, k, l)
+        Shares.append(tmp)
+
+    # recover image
+    recovered_img = []
+    for i in range(len(Shares)):
+        tmp = lagrange(0, Shares[i])
+        recovered_img.append(tmp)
+        
+    # write recovered image
+    decoder(REC, recover_name_gif, recovered_img)
+
+    # check image
+    for i in range(len(Secret)):
+        recovered_img[i] = int(recovered_img[i], 16)
+        if Secret[i] == recovered_img[i]:
+            pass
+        else:
+            print("Recover Failed!!")
+            exit(1)
+    print("Correctly Recovered JPEG IMAGE!!")
+
+    l = [gif_path]
+    l.append(REC + recover_name_gif)
+    # l = [REC + recover_name_gif]
+    show_img3(l)
+
+    
 
 
 if __name__ == "__main__":

@@ -9,51 +9,34 @@ from const import (
     fmt,
 )
 
-def encoder(img: str) -> str:
-    image = cv2.imread(img)
-    # cv2.imshow("img", image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    r_flg, encoded_img = cv2.imencode('.jpeg', image)
-
-    return encoded_img
-
-
 # int, str間の変換は桁数が大きくなるとかなり遅い
 # そのためhexのまま分割してその先でint変換する
-def encoder_jpeg(img: str) -> list[int]:
+def encoder(img: str) -> list[int]:
     with open(img, "rb") as f:
         f = f.read().hex()
     
     img = f
     encoded_img = []
-    ##############################
-    ### here is very very slow ###
-    ### fix here               ###
-    ##############################
     # integer limit 4300 in python
     # for each elemet -> 2900
     for i in range(0, len(img), split_rate):
-        tmp = "".join(map(str, img[i : i + split_rate]))
-        tmp = int(tmp, 16)
+        tmp = int(img[i : i + split_rate], 16)
         encoded_img.append(tmp)
+        tmp = 0
 
     return encoded_img
 
 
-def decoder_jpeg(filepath: str, name, img: list) -> None:
+def decoder(filepath: str, name, img: list) -> None:
     # 16 -> 10 -> 16で桁が消えることがあるので
     # 桁数合わせて0パディング
     s1 = time.perf_counter()
 
-    ##############################
-    ### here is very very slow ###
-    ### fix here               ###
-    ##############################
     for i in range(len(img)):
         img[i] = hex(int(img[i]))[2:]
-        while len(img[i]) % split_rate != 0 and img.index(img[-1]) != i:
-            img[i] = "0" + img[i]
+        if len(img[i]) < split_rate  and img.index(img[-1]) != i:
+            img[i] = "0" * (split_rate - len(img[i])) + img[i]
+            
     data = "".join(map(str, img))
     data = bytes.fromhex(data)
 
@@ -66,6 +49,7 @@ def decoder_jpeg(filepath: str, name, img: list) -> None:
     e2 = time.perf_counter()
     print(e2 - e1)
 
+    
 def encoder_bmp(img: str) -> int:
     with open(img, "rb") as f:
         enc_img = f.read().hex()

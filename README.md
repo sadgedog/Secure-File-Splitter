@@ -1,12 +1,11 @@
 # About this
 
-image splitter is an application that allows you to secure your secret images by distributing them.
+Secure File Splitter is an application that allows you to secure your secret images by distributing them.
 
 # Detail
 
-image splitter distributes an image into several "shares" based on Samir's secret sharing.
+Secure File Splitter distributes an file(picture) into several "shares" based on Samir's secret sharing.
 The individual shares themselves have no special meaning, and original image can be restored only when it has attracted more than a predetermined "threshold" number of shares.
-
 
 
 ![explain](./docs/explain.png)
@@ -15,16 +14,13 @@ The individual shares themselves have no special meaning, and original image can
 
 - Run : ./test.sh or python3 main.py
 
-image splitter includes cv2 as external libraries.
+Secure File Splitter includes cv2 as external libraries.
 Therefore, please install those libraries when you test this.
 
 - Demo
 
-BMP format test\
-![test](./docs/example.gif)
-
-JPEG format test\
-![JPEG](./docs/example2.gif)
+BMP, JPEG, GIF test\
+![JPEG](./docs/demo.gif)
 
 
 with my Mac(2020 m1, 16GB) it takes 0.05sec to recover JPEG image\
