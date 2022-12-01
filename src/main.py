@@ -157,8 +157,6 @@ def main():
     Secret = encoder_bmp(gopher)
     
     shares = generate_share(Secret, n, k)
-    for i in range(len(shares)):
-        print(f"share[{i}] : ", shares[i])
         
     recovered_img = lagrange(0, shares)
 
@@ -226,7 +224,6 @@ def main():
 
     s_dec = time.perf_counter()
     # write recovered image
-    # rec = "../../tmp_data/100MB.png"
     decoder(REC, recover_name, recovered_img)
     e_dec = time.perf_counter()
     print("Decode Time :   ", e_dec - s_dec)
@@ -240,10 +237,12 @@ def main():
 
     # check image
     for i in range(len(Secret)):
-        recovered_img[i] = int(recovered_img[i], 16)
+        recovered_img[i] = int.from_bytes(recovered_img[i], "little")
         if Secret[i] == recovered_img[i]:
             pass
         else:
+            print(Secret[i])
+            print(recovered_img[i])
             print("Recover Failed!!")
             exit(1)
     print("Correctly Recovered JPEG IMAGE!!")
@@ -281,7 +280,7 @@ def main():
 
     # check image
     for i in range(len(Secret)):
-        recovered_img[i] = int(recovered_img[i], 16)
+        recovered_img[i] = int.from_bytes(recovered_img[i], "little")
         if Secret[i] == recovered_img[i]:
             pass
         else:
@@ -291,7 +290,6 @@ def main():
 
     l = [gif_path]
     l.append(REC + recover_name_gif)
-    # l = [REC + recover_name_gif]
     show_img3(l)
 
     

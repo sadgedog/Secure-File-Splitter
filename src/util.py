@@ -13,16 +13,16 @@ from const import (
 # そのためhexのまま分割してその先でint変換する
 def encoder(img: str) -> list[int]:
     with open(img, "rb") as f:
-        f = f.read().hex()
+        # f = f.read().hex()
+        f = f.read()
     
-    img = f
     encoded_img = []
     # integer limit 4300 in python
     # for each elemet -> 2900
-    for i in range(0, len(img), split_rate):
-        tmp = int(img[i : i + split_rate], 16)
+    for i in range(0, len(f), split_rate):
+        # tmp = int(img[i : i + split_rate], 16)
+        tmp = int.from_bytes(f[i : i + split_rate], "little")
         encoded_img.append(tmp)
-        tmp = 0
 
     return encoded_img
 
@@ -30,24 +30,19 @@ def encoder(img: str) -> list[int]:
 def decoder(filepath: str, name, img: list) -> None:
     # 16 -> 10 -> 16で桁が消えることがあるので
     # 桁数合わせて0パディング
-    s1 = time.perf_counter()
 
+    # for i in range(len(img)):
+    #     img[i] = hex(int(img[i]))[2:]
+    #     if len(img[i]) < split_rate  and img.index(img[-1]) != i:
+    #         img[i] = "0" * (split_rate - len(img[i])) + img[i]
     for i in range(len(img)):
-        img[i] = hex(int(img[i]))[2:]
-        if len(img[i]) < split_rate  and img.index(img[-1]) != i:
-            img[i] = "0" * (split_rate - len(img[i])) + img[i]
+        img[i] = img[i].to_bytes(split_rate, "little")
             
-    data = "".join(map(str, img))
-    data = bytes.fromhex(data)
-
-    e1 = time.perf_counter()
-    print(e1 - s1)
+    data = b''.join(img)
 
     filename = filepath + name
     with open(filename, "wb") as f:
         f.write(data)
-    e2 = time.perf_counter()
-    print(e2 - e1)
 
     
 def encoder_bmp(img: str) -> int:
