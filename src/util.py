@@ -13,14 +13,11 @@ from const import (
 # そのためhexのまま分割してその先でint変換する
 def encoder(img: str) -> list[int]:
     with open(img, "rb") as f:
-        # f = f.read().hex()
         f = f.read()
     
     encoded_img = []
     # integer limit 4300 in python
-    # for each elemet -> 2900
     for i in range(0, len(f), split_rate):
-        # tmp = int(img[i : i + split_rate], 16)
         tmp = int.from_bytes(f[i : i + split_rate], "little")
         encoded_img.append(tmp)
 
@@ -28,13 +25,6 @@ def encoder(img: str) -> list[int]:
 
 
 def decoder(filepath: str, name, img: list) -> None:
-    # 16 -> 10 -> 16で桁が消えることがあるので
-    # 桁数合わせて0パディング
-
-    # for i in range(len(img)):
-    #     img[i] = hex(int(img[i]))[2:]
-    #     if len(img[i]) < split_rate  and img.index(img[-1]) != i:
-    #         img[i] = "0" * (split_rate - len(img[i])) + img[i]
     for i in range(len(img)):
         img[i] = img[i].to_bytes(split_rate, "little")
             

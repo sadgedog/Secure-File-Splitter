@@ -32,11 +32,6 @@ from util import (
 
 def show_img(image):
     all_image = []
-    # for img in image:
-    #     all_image.append(cv2.imread(img))
-    #     merge = numpy.hstack(all_image)
-        
-    # cv2.imshow("img", merge)
     for img in image:
         all_image.append(cv2.imread(img))
 
@@ -56,23 +51,12 @@ def show_img(image):
         elif i == len(all_image) - 1:
             cv2.imshow("Recovered Image", all_image[i])
             cv2.moveWindow("Recovered Image", i * W, 0)
-        # JPEG SHOW
-        # elif i == len(all_image) - 2:
-        #     all_image[i] = cv2.resize(all_image[i], (W2, H2))
-        #     cv2.imshow("Original JPEG Image", all_image[i])
-        #     cv2.moveWindow("Original JPEG Image", 0, 400)
-        # elif i == len(all_image) - 1:
-        #     all_image[i] = cv2.resize(all_image[i], (W2, H2))
-        #     cv2.imshow("Recovered JPEG Image", all_image[i])
-        #     cv2.moveWindow("Recovered JPEG Image", W2, 400)
-        # BMP
         else:
             title = "Share" + str(i)
             cv2.imshow(title, all_image[i])
             cv2.moveWindow(title, i * W, 0)
     
     cv2.waitKey(1)
-    # cv2.destroyAllWindows()
 
 
 def show_img2(image):
@@ -100,7 +84,6 @@ def show_img2(image):
             cv2.moveWindow(title, i * W, 0)    
 
     cv2.waitKey(1)
-#    cv2.destroyAllWindows()
 
 
 def show_img3(image):
@@ -247,8 +230,6 @@ def main():
             exit(1)
     print("Correctly Recovered JPEG IMAGE!!")
 
-    # l.append(image_path)
-    # l.append(REC + "Recovered_JPEG_Image.jpg")
     l = [image_path]
     l.append(REC + recover_name)
     show_img2(l)
@@ -290,6 +271,7 @@ def main():
 
     l = [gif_path]
     l.append(REC + recover_name_gif)
+
     show_img3(l)
 
     
