@@ -31,8 +31,12 @@ Generate Shares -> 42.04 MB/sec
 Recover Images -> 32.71 MB/sec
 
 
-WebCamera test\
-![WebCamera](./docs/webcamera.gif)
+WebCamera test (n = 5, k = 5)\
+![WebCamera1](./docs/nk55.gif)
+
+WebCamera test (n = 50, k = 50)\
+![WebCamera2](./docs/nk5050.gif)
+
 
 If you have Web Camera, you can check the recovered video data acquired from the Web Camera with almost no delay!
 
