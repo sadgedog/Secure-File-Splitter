@@ -1,6 +1,8 @@
 import sys
 import time
+import io
 import cv2
+from PIL import Image
 from splitter import (
     rnd_scalar,
     hash_to_scalar,
@@ -18,6 +20,7 @@ from const import (
     gif_path,
     gopher,
     REC,
+    split_rate,
     recover_name,
     recover_name_gif,
     width, height,
@@ -137,37 +140,8 @@ def main():
         n = int(args[1])
         k = int(args[2])
     
-    Secret = encoder_bmp(gopher)
-    
-    shares = generate_share(Secret, n, k)
-        
-    recovered_img = lagrange(0, shares)
-
-    # write shares
-    for i in range(len(shares)):
-        decoder_bmp(REC, f"Share{i + 1}.bmp", shares[i])
-    
-    # write recovered image
-    decoder_bmp(REC, "Recovered_Image.bmp", recovered_img)
-    
-
-    print("Original Data :  ", Secret)
-    print("Recovered Data : ", recovered_img)
-    if Secret == recovered_img:
-         print("Correctly Recovered BMP IMAGE!!")
-    else:
-        print("Recover Failed!!")
-
-    l = [gopher]
-    for i in range(len(shares)):
-        l.append(REC + f"Share{i + 1}.bmp")
-    l.append(REC + "Recovered_Image.bmp")
-        
-    show_img(l)
-
-    s_all = time.perf_counter()
     # JPEG TEST
-    print("JPEG TEST START")
+    s_all = time.perf_counter()
     s_enc = time.perf_counter()
     Secret = encoder(image_path)
     e_enc = time.perf_counter()
@@ -199,7 +173,6 @@ def main():
     for i in range(len(Shares)):
         tmp = lagrange(0, Shares[i])
         recovered_img.append(tmp)
-        # print("recovered_img", tmp)
         
     E2 = time.perf_counter()
     print("Recover Time :  ", E2 - S2)
@@ -274,8 +247,65 @@ def main():
 
     show_img3(l)
 
+
+def camera():
+    args = sys.argv
+    n = int(args[1])
+    k = int(args[2])
+    cap = cv2.VideoCapture(0)
+
+    l = []
+    for i in range(1, k):
+        tmp = rnd_scalar()
+        l.append(tmp)
+
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = Image.fromarray(frame)
+        fmt = io.BytesIO()
+        image.save(fmt, format="jpeg")
+        b_frame = fmt.getvalue()
+
+        print("encode")
+        encoded_img = []
+        for i in range(0, len(b_frame), split_rate):
+            tmp = int.from_bytes(b_frame[i : i + split_rate], "little")
+            encoded_img.append(tmp)
+
+        print("gen shares")
+        Shares = []
+        for i in range(len(encoded_img)):
+            tmp = generate_share_2(encoded_img[i], n, k, l)
+            Shares.append(tmp)
+
+        print("recover")
+        recovered_img = []
+        for i in range(len(Shares)):
+            tmp = lagrange(0, Shares[i])
+            recovered_img.append(tmp)
+
+        print("decode")
+        for i in range(len(recovered_img)):
+            recovered_img[i] = recovered_img[i].to_bytes(split_rate, "little")
+        data = b''.join(recovered_img)
+        with open(REC + recover_name, "wb") as f:
+            f.write(data)
+        
+        print("show")
+        img = cv2.imread(REC + recover_name)
+        cv2.imshow("WebCamera", img)
+
+        key = cv2.waitKey(10)
+        if key == 27:
+            break
+            
+    cv2.destroyAllWindow()
+
     
-
-
 if __name__ == "__main__":
-    main()
+    args = sys.argv
+    if args[3] == "main":
+        main()
+    elif args[3] == "camera":
+        camera()

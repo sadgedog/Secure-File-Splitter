@@ -12,9 +12,12 @@ The individual shares themselves have no special meaning, and original image can
 
 # How to run
 
-- Run : ./test.sh or python3 main.py
+- Run Image test : ./test.sh or python3 main.py
 
-Secure File Splitter includes cv2 as external libraries.
+- Run WebCamera test : ./camera_test.sh or python3 main.py 5 5 camera
+
+
+Secure File Splitter includes cv2 and PIL as external libraries.
 Therefore, please install those libraries when you test this.
 
 - Demo
@@ -22,12 +25,22 @@ Therefore, please install those libraries when you test this.
 BMP, JPEG, GIF test\
 ![JPEG](./docs/demo.gif)
 
-
 with my Mac(2020 m1, 16GB) it takes 0.05sec to recover JPEG image\
 Generate Shares -> 42.04 MB/sec
 
 Recover Images -> 32.71 MB/sec
 
 
+WebCamera test\
+![WebCamera](./docs/webcamera.gif)
+
+If you have Web Camera, you can check the recovered video data acquired from the Web Camera with almost no delay!
+(You can change second argument(n) and third argument(k) at will (n >= k),
+but be careful not to use too large values,
+as this Application will drastically reduce the frame rete.
+
+I recommend the default value or at most 20)
+
+
 # TODO:
-- Improve efficiency of Encode, Decode
+- Implement using multi-process or multi-thread
