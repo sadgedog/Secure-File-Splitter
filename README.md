@@ -35,11 +35,12 @@ WebCamera test\
 ![WebCamera](./docs/webcamera.gif)
 
 If you have Web Camera, you can check the recovered video data acquired from the Web Camera with almost no delay!
-(You can change fist argument(n) and second argument(k) at will (n >= k),
+
+You can change fist argument(n) and second argument(k) at will (need n >= k),
 but be careful not to use too large values,
 as this Application will drastically reduce the frame rate.
 
-I recommend the default value or at most 20)
+I recommend the default value or at most 20
 
 
 # TODO:
