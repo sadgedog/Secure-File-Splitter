@@ -16,10 +16,12 @@ from recover import (
 )
 
 from const import (
+    fm,
     image_path,
     gif_path,
     gopher,
     REC,
+    share_name,
     split_rate,
     recover_name,
     recover_name_gif,
@@ -248,6 +250,8 @@ def main():
     show_img3(l)
 
 
+sys.set_int_max_str_digits(4500)
+
 def camera():
     args = sys.argv
     n = int(args[1])
@@ -266,6 +270,7 @@ def camera():
         fmt = io.BytesIO()
         image.save(fmt, format="jpeg")
         b_frame = fmt.getvalue()
+        # b_frame = b_frame[len(jpeg_fmt):]
 
         print("encode")
         encoded_img = []
@@ -285,13 +290,28 @@ def camera():
             tmp = lagrange(0, Shares[i])
             recovered_img.append(tmp)
 
+        # check
+        f = False
+        for i in range(len(encoded_img)):
+            if encoded_img[i] == recovered_img[i]:
+                f = True
+                pass
+            else:
+                print("Recover Failed!")
+                f = False
+                break
+        if f:
+            print("Recover OK!")
+            
+        
         print("decode")
         for i in range(len(recovered_img)):
             recovered_img[i] = recovered_img[i].to_bytes(split_rate, "little")
         data = b''.join(recovered_img)
+        # data = jpeg_fmt + data
         with open(REC + recover_name, "wb") as f:
             f.write(data)
-        
+                    
         print("show")
         img = cv2.imread(REC + recover_name)
         cv2.imshow("WebCamera", img)
