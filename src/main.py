@@ -141,6 +141,35 @@ def main():
     else:
         n = int(args[1])
         k = int(args[2])
+
+    # BMP test
+    Secret = encoder_bmp(gopher)
+    
+    shares = generate_share(Secret, n, k)
+        
+    recovered_img = lagrange(0, shares)
+
+    # write shares
+    for i in range(len(shares)):
+        decoder_bmp(REC, f"Share{i + 1}.bmp", shares[i])
+    
+    # write recovered image
+    decoder_bmp(REC, "Recovered_Image.bmp", recovered_img)
+    
+
+    print("Original Data :  ", Secret)
+    print("Recovered Data : ", recovered_img)
+    if Secret == recovered_img:
+         print("Correctly Recovered BMP IMAGE!!")
+    else:
+        print("Recover Failed!!")
+
+    l = [gopher]
+    for i in range(len(shares)):
+        l.append(REC + f"Share{i + 1}.bmp")
+    l.append(REC + "Recovered_Image.bmp")
+        
+    show_img(l)
     
     # JPEG TEST
     s_all = time.perf_counter()

@@ -12,7 +12,7 @@ The individual shares themselves have no special meaning, and original image can
 
 # How to run
 
-- Run Image test : ./test.sh or python3 main.py
+- Run Image test : ./test.sh or python3 main.py 5 5 main
 
 - Run WebCamera test : ./camera_test.sh or python3 main.py 5 5 camera
 
