@@ -17,13 +17,17 @@ from recover import (
 
 from const import (
     fm,
+    fm_bmp,
     image_path,
     gif_path,
     gopher,
     REC,
     share_name,
     split_rate,
+    split_rate_bmp,
     recover_name,
+    recover_name_bmp,
+    recover_name_bmp2,
     recover_name_gif,
     width, height,
 )
@@ -145,9 +149,9 @@ def main():
     # BMP test
     Secret = encoder_bmp(gopher)
     
-    shares = generate_share(Secret, n, k)
+    shares = generate_share(Secret, n, k, fm)
         
-    recovered_img = lagrange(0, shares)
+    recovered_img = lagrange(0, shares, fm)
 
     # write shares
     for i in range(len(shares)):
@@ -183,7 +187,7 @@ def main():
     # rnd coefficients
     l = []
     for i in range(1, k):
-        tmp = rnd_scalar()
+        tmp = rnd_scalar(fm)
         l.append(tmp)
         
     for i in range(len(Secret)):
@@ -201,7 +205,7 @@ def main():
     S2 = time.perf_counter()
     recovered_img = []
     for i in range(len(Shares)):
-        tmp = lagrange(0, Shares[i])
+        tmp = lagrange(0, Shares[i], fm)
         recovered_img.append(tmp)
         
     E2 = time.perf_counter()
@@ -245,7 +249,7 @@ def main():
     # rnd coefficients
     l = []
     for i in range(1, k):
-        tmp = rnd_scalar()
+        tmp = rnd_scalar(fm)
         l.append(tmp)
 
     # gen shares
@@ -256,7 +260,7 @@ def main():
     # recover image
     recovered_img = []
     for i in range(len(Shares)):
-        tmp = lagrange(0, Shares[i])
+        tmp = lagrange(0, Shares[i], fm)
         recovered_img.append(tmp)
         
     # write recovered image
@@ -285,10 +289,10 @@ def camera():
     n = int(args[1])
     k = int(args[2])
     cap = cv2.VideoCapture(0)
-
+    
     l = []
     for i in range(1, k):
-        tmp = rnd_scalar()
+        tmp = rnd_scalar(fm)
         l.append(tmp)
 
     while True:
@@ -314,7 +318,7 @@ def camera():
         print("recover")
         recovered_img = []
         for i in range(len(Shares)):
-            tmp = lagrange(0, Shares[i])
+            tmp = lagrange(0, Shares[i], fm)
             recovered_img.append(tmp)
 
         # check
@@ -350,9 +354,107 @@ def camera():
     cv2.destroyAllWindow()
 
     
+def camera_bmp():
+    args = sys.argv
+    n = int(args[1])
+    k = int(args[2])
+    cap = cv2.VideoCapture(0)
+    format_num = 3
+    
+    l = []
+    for i in range(1, k):
+        tmp = rnd_scalar(fm_bmp)
+        l.append(tmp)
+
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = Image.fromarray(frame)
+        fmt = io.BytesIO()
+        image.save(fmt, format="bmp")
+        b_frame = fmt.getvalue()
+
+        print("encode")
+        encoded_img = []
+        encoded_format = []
+        
+        for i in range(0, format_num, split_rate_bmp):
+            tmp = int.from_bytes(b_frame[i : i + split_rate_bmp], "little")
+            encoded_format.append(tmp)
+        
+        for i in range(format_num, len(b_frame), split_rate_bmp):
+            tmp = int.from_bytes(b_frame[i : i + split_rate_bmp], "little")
+            encoded_img.append(tmp)
+        
+        print("gen shares")
+        fail_Shares = []
+        for i in range(len(encoded_img)):
+            # tmp = generate_share(encoded_img[i], n, k, fm_bmp)
+            tmp = generate_share(encoded_img[i], n, k, fm)
+            fail_Shares.append(tmp)
+
+        Shares = []
+        encoded_img[0:1] = encoded_format
+        for i in range(len(encoded_img)):
+            # tmp = generate_share(encoded_img[i], n+1, k, fm_bmp)
+            tmp = generate_share(encoded_img[i], n+1, k, fm)
+            Shares.append(tmp)
+
+        
+        print("recover")
+        recover_fail_img = []
+        for i in range(len(fail_Shares)):
+            tmp = lagrange(0, fail_Shares[i], fm_bmp)
+            # tmp = lagrange(0, fail_Shares[i], fm)
+            recover_fail_img.append(tmp)
+            
+        recover_img = []
+        for i in range(len(Shares)):
+            # tmp = lagrange(0, Shares[i], fm_bmp)
+            tmp = lagrange(0, Shares[i], fm)
+            recover_img.append(tmp)
+
+            
+        print("decode")
+        recover_fail_img[0:1] = encoded_format
+        re = []
+        for i in range(len(recover_fail_img)):
+            recover_fail_img[i] = recover_fail_img[i].to_bytes(split_rate_bmp, "little")
+        data = b''.join(recover_fail_img)
+        with open(REC + recover_name_bmp, "wb") as f:
+            f.write(data)
+
+        for i in range(len(recover_fail_img)):
+            recover_img[i] = recover_img[i].to_bytes(split_rate_bmp, "little")
+        data = b''.join(recover_img)
+        with open(REC + recover_name_bmp2, "wb") as f:
+            f.write(data)
+            
+        print("show")
+        img_fail = cv2.imread(REC + recover_name_bmp)
+        h = img_fail.shape[0]
+        w = img_fail.shape[1]
+        img_fail =  cv2.resize(img_fail, (int(w/2), int(h/2)))
+        cv2.imshow("WebCamera_Fail", img_fail)
+        
+        img = cv2.imread(REC + recover_name_bmp2)
+        img =  cv2.resize(img, (int(w/2), int(h/2)))
+        cv2.imshow("WebCamera", img)
+        cv2.moveWindow("WebCamera", int(w/2), -200)
+
+        key = cv2.waitKey(10)
+        if key == 27:
+            break
+            
+    cv2.destroyAllWindow()
+
+
+
 if __name__ == "__main__":
     args = sys.argv
     if args[3] == "main":
         main()
     elif args[3] == "camera":
         camera()
+    elif args[3] == "camera_compare":
+        camera_bmp()

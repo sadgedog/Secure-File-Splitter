@@ -1,9 +1,10 @@
 from fractions import Fraction
 from const import (
     fm,
+    fm_bmp,
 )
 
-def lagrange(x: int, shares: list):
+def lagrange(x: int, shares: list, fm: int):
     result = 0
     for i in range(len(shares)):
         elc = lagrange_coef(x, i, shares)

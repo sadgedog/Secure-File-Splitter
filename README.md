@@ -16,6 +16,8 @@ The individual shares themselves have no special meaning, and original image can
 
 - Run WebCamera test : ./camera_test.sh or python3 main.py 5 5 camera
 
+- Run WebCamera with fail test : ./camera_fail.sh or python3 main.py 1 2 camera_compare
+
 
 Secure File Splitter includes cv2 and PIL as external libraries.
 Therefore, please install those libraries when you test this.
@@ -36,6 +38,13 @@ WebCamera test (n = 5, k = 5)\
 
 WebCamera test (n = 50, k = 50)\
 ![WebCamera2](./docs/nk5050.gif)
+
+
+Web Camera with Fail test (n = 1, k = 2)\
+This demo is low performance because of using BMP format.\
+The left side shows that recover fail because threadshold k(=2) is bigger than number of shares n(=1).\
+The right side shows that all shares collected.
+![WebCamera3](./docs/camera_fail.gif)
 
 
 If you have Web Camera, you can check the recovered video data acquired from the Web Camera with almost no delay!

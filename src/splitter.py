@@ -2,14 +2,15 @@ import secrets
 import hashlib
 from const import (
     fm,
+    fm_bmp,
 )
 
 
-def rnd_scalar():
+def rnd_scalar(fm: int):
     return secrets.randbelow(fm)
 
 
-def hash_to_scalar(msg):
+def hash_to_scalar(msg: int, fm: int):
     return (
         int.from_bytes(hashlib.sha3_256(str(msg).encode()).digest(), "big")
         % fm
@@ -17,10 +18,10 @@ def hash_to_scalar(msg):
 
 
 # s: secret, n: number of shares, k: threadshold
-def generate_share(s: int, n: int, k: int):    
+def generate_share(s: int, n: int, k: int, fm: int):    
     coefficients = [s]
     for i in range(1, k):
-        tmp = rnd_scalar()
+        tmp = rnd_scalar(fm)
         coefficients.append(tmp)
     
     def f(x):
